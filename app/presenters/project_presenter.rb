@@ -6,13 +6,19 @@
 # We make no guarantees that this code is fit for any purpose. 
 # Visit http://www.pragmaticprogrammer.com/titles/nrtest2 for more book information.
 #---
-Gatherer::Application.routes.draw do
-  resources :tasks do
-    member do
-      patch :up
-      patch :down
-    end
+class ProjectPresenter < SimpleDelegator
+
+  def self.from_project_list(*projects) 
+    projects.flatten.map { |project| ProjectPresenter.new(project) }
   end
 
-  resources :projects
+  def initialize(project) 
+    super
+  end
+
+  def name_with_status 
+    dom_class = on_schedule? ? 'on_schedule' : 'behind_schedule'
+    "<span class='#{dom_class}'>#{name}</span>"
+  end
+
 end

@@ -9,12 +9,18 @@
 class ProjectsController < ApplicationController
 
   def index
-    @projects = Project.all
+    @projects = ProjectPresenter.from_project_list(Project.all)
   end
 
   def new
     @project = Project.new
   end
+
+  #
+  def show
+    @project = Project.find(params[:id])
+  end
+  #
 
   def create
     @action = CreatesProject.new(

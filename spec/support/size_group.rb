@@ -6,13 +6,16 @@
 # We make no guarantees that this code is fit for any purpose. 
 # Visit http://www.pragmaticprogrammer.com/titles/nrtest2 for more book information.
 #---
-Gatherer::Application.routes.draw do
-  resources :tasks do
-    member do
-      patch :up
-      patch :down
-    end
+RSpec.shared_examples "sizeable" do
+  let(:instance) { described_class.new }
+
+  it "knows a one-point story is small" do
+    allow(instance).to receive(:size).and_return(1)
+    expect(instance).to be_small
   end
 
-  resources :projects
+  it "knows a five-point story is epic" do
+    allow(instance).to receive(:size).and_return(5)
+    expect(instance).to be_epic
+  end
 end

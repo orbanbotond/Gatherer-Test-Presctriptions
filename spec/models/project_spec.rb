@@ -18,7 +18,7 @@ RSpec.describe Project do
       expect(project).to be_done
     end
 
-    it "knows that a project with an incomplete test is not done" do
+    it "knows that a project with an incomplete task is not done" do
       project.tasks << task
       expect(project).not_to be_done
     end
@@ -113,7 +113,7 @@ RSpec.describe Project do
 #
 
 #
-  xit "stubs with multiple returns" do
+  it "stubs with multiple returns" do
     project = Project.new
     allow(project).to receive(:user_count).and_return(1, 2)
     assert_equal(1, project.user_count)
@@ -122,57 +122,21 @@ RSpec.describe Project do
   end
 #
 
-  context "for my understanding" do
-    it "generic doubles" do
-      x = double(:fn => "Boti", :m => "Masik")
-      expect(x.fn).to eq("Boti")
-      expect(x.m).to eq("Masik")
-      expect { x.asdsad }.to raise_error(Exception)
+  #
+  describe "task order" do
+    let(:project) { project = Project.create(name: "Project") }
+
+    it "gives me the order of the first task in an empty project" do
+      expect(project.next_task_order).to eq(1)
     end
-    it "doubles as null objects aka spyes" do
-      x = double.as_null_object
-      expect{ x.asdsad }.to_not raise_error(Exception)
-      x = spy
-      expect{ x.asdsad }.to_not raise_error(Exception)
-    end
-    context "verifying" do
-      context "doubles" do
-        it "instances" do
-          x = instance_double( Project, :name => "Boti")
-          expect{ x.find_by_id }.to raise_error(Exception)
-          expect{ x.name }.to_not raise_error(Exception)
-        end
-        it "classes" do
-          x = class_double Project
-          allow(x).to receive(:first).and_return(nil)
-          expect{ x.asdsad }.to raise_error(Exception)
-          expect{ x.first }.to_not raise_error(Exception)
-        end
-        it "instances allowing the dynamic methods to be stubbed" do
-          x = object_double Project
-          allow(x).to receive(:find_by_id).and_return(nil)
-          expect{ x.find_by_id }.to_not raise_error(Exception)
-          expect{ x.find_by_iddd }.to raise_error(Exception)
-        end
-      end
-      context "spies" do
-        it "instances" do
-          x = instance_spy( Project)
-          expect{ x.find_by_id }.to raise_error(Exception)
-          expect{ x.name }.to_not raise_error(Exception)
-        end
-        it "classes" do
-          x = class_spy Project
-          expect{ x.asdsad }.to raise_error(Exception)
-          expect{ x.first }.to_not raise_error(Exception)
-        end
-        it "instances allowing the dynamic methods to be stubbed" do
-          x = object_spy Project
-          expect{ x.find_by_id }.to_not raise_error(Exception)
-          expect{ x.find_by_iddd }.to raise_error(Exception)
-        end
-      end
+
+    
+    it "gives me the order of the next task in a project" do
+      project.tasks.create(project_order: 3)
+      expect(project.next_task_order).to eq(4)
     end
   end
+#
+
 
 end

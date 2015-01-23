@@ -6,13 +6,8 @@
 # We make no guarantees that this code is fit for any purpose. 
 # Visit http://www.pragmaticprogrammer.com/titles/nrtest2 for more book information.
 #---
-Gatherer::Application.routes.draw do
-  resources :tasks do
-    member do
-      patch :up
-      patch :down
-    end
+class AddOrderToTasks < ActiveRecord::Migration
+  def change
+    add_column :tasks, :project_order, :integer
   end
-
-  resources :projects
 end

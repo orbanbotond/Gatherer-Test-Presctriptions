@@ -1,3 +1,4 @@
+
 #---
 # Excerpted from "Rails 4 Test Prescriptions",
 # published by The Pragmatic Bookshelf.
