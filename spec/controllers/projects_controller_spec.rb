@@ -1,4 +1,3 @@
-
 #---
 # Excerpted from "Rails 4 Test Prescriptions",
 # published by The Pragmatic Bookshelf.
@@ -10,6 +9,12 @@
 require 'rails_helper'
 
 RSpec.describe ProjectsController, type: :controller do
+
+  #
+  before(:example) do
+    sign_in User.create!(email: "rspec@example.com", password: "password")
+  end
+  #
 
   describe "POST create" do
     #
@@ -24,9 +29,9 @@ RSpec.describe ProjectsController, type: :controller do
     it "creates a project (mock version)" do
       fake_action = instance_double(CreatesProject, create: true) 
       expect(CreatesProject).to receive(:new)  
-          .with(name: "Runway", task_string: "start something:2")
+          .with(name: "Runway", task_string: "Start something:2")
           .and_return(fake_action)
-      post :create, project: {name: "Runway", tasks: "start something:2"}
+      post :create, project: {name: "Runway", tasks: "Start something:2"}
       expect(response).to redirect_to(projects_path)
       expect(assigns(:action)).not_to be_nil 
     end
@@ -47,12 +52,12 @@ RSpec.describe ProjectsController, type: :controller do
       post :create, :project => {name: 'Project Runway'} 
       expect(response).to render_template(:new) 
     end
-
     #
+
   end
 
-  describe "PATCH update" do
   #
+  describe "PATCH update" do
     it "fails update gracefully" do
       sample = Project.create!(name: "Test Project")
       expect(sample).to receive(:update_attributes).and_return(false) 
@@ -60,7 +65,25 @@ RSpec.describe ProjectsController, type: :controller do
       patch :update, id: sample.id, project: {name: "Fred"} 
       expect(response).to render_template(:edit) 
     end
-  #
   end
+  #
+
+  #
+  describe "GET show" do
+    let(:project) { Project.create(name: "Project Runway") }
+
+    it "allows a user who is part of the project to see the project" do
+      allow(controller.current_user).to receive(:can_view?).and_return(true)
+      get :show, id: project.id
+      expect(response).to render_template(:show)
+    end
+
+    it "does not allow a user who is not part of the project to see the project" do
+      allow(controller.current_user).to receive(:can_view?).and_return(false)
+      get :show, id: project.id
+      expect(response).to redirect_to(new_user_session_path)
+    end
+  end
+  #
 
 end

@@ -7,6 +7,7 @@
 # Visit http://www.pragmaticprogrammer.com/titles/nrtest2 for more book information.
 #---
 Gatherer::Application.routes.draw do
+  devise_for :users
   resources :tasks do
     member do
       patch :up
@@ -15,4 +16,6 @@ Gatherer::Application.routes.draw do
   end
 
   resources :projects
+
+  root to: 'projects#index'
 end
