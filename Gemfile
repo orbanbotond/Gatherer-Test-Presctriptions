@@ -60,3 +60,10 @@ end
 group :test do
   gem 'capybara'
 end
+
+group :development do
+  gem 'guard'
+  gem 'guard-minitest'
+  gem 'guard-rspec'
+  gem 'guard-cucumber'
+end  
