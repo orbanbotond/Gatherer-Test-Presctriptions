@@ -7,6 +7,7 @@
 # Visit http://www.pragmaticprogrammer.com/titles/nrtest2 for more book information.
 #---
 Gatherer::Application.routes.draw do
+  mount JasmineRails::Engine => '/specs' if defined?(JasmineRails)
   devise_for :users
   resources :tasks do
     member do
