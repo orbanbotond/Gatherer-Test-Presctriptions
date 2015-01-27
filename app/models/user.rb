@@ -14,6 +14,7 @@ class User < ActiveRecord::Base
 
   has_many :roles
   has_many :projects, through: :roles
+  has_many :tasks
 
   #
   def can_view?(project)
@@ -25,6 +26,13 @@ class User < ActiveRecord::Base
   def visible_projects
     return Project.all.to_a if admin?
     (projects.to_a + Project.all_public).uniq.sort_by(&:id)
+  end
+  #
+
+  #
+  def avatar_url
+    adapter = AvatarAdapter.new(self)
+    adapter.image_url
   end
   #
 end

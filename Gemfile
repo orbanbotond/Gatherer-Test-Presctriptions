@@ -35,6 +35,9 @@ gem 'devise'
 # gem 'capistrano-rails', group: :development
 
 gem 'factory_girl_rails'
+gem 'twitter'
+gem 'vcr', group: :test
+gem 'webmock', group: :test
 
 group :development, :test do
 

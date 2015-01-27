@@ -7,7 +7,9 @@
 # Visit http://www.pragmaticprogrammer.com/titles/nrtest2 for more book information.
 #---
 require 'rails_helper'
+
 describe User do
+
   RSpec::Matchers.define :be_able_to_see do |*projects|
     match do |user|
       expect(user.visible_projects).to eq(projects)
@@ -47,5 +49,22 @@ describe User do
       project_1.update_attributes(public: true)
       expect(user).to be_able_to_see(project_1)
     end
+
   end
+
+  #
+  describe "avatars" do
+    let(:user) { User.new(email: "test@example.com") }
+    let(:fake_adapter) { instance_double(AvatarAdapter) }
+
+    it "can get a twitter avatar URL" do
+      allow(fake_adapter).to receive(:image_url).and_return("fake_url")
+      allow(AvatarAdapter).to receive(:new).with(user).and_return(fake_adapter)
+      user.avatar_url
+      expect(fake_adapter).to have_received(:image_url)
+      expect(AvatarAdapter).to have_received(:new)
+    end
+  end
+  #
+
 end

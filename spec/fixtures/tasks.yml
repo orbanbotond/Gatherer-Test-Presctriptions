@@ -3,11 +3,13 @@ one:
   title: Hunt the aliens
   size: 1
   project_order: 1
-  completed_at:
+  completed_at: <%= 1.month.ago %>
+  user: user
 
 two:
   project: bluebook
   title: Write a book
   size: 1
   project_order: 2
-  completed_at:
+  completed_at:  <%= 1.month.ago %>
+  user: user
