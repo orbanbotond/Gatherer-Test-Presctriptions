@@ -51,4 +51,16 @@ describe "with users and roles" do
   end
   #
 
+  #
+  it "allows users to only see projects they are a part of on the index page" do
+    my_project = Project.create!(name: "My Project")
+    my_project.roles.create(user: user)
+    not_my_project = Project.create!(name: "Not My Project")
+    log_in_as(user)
+    visit projects_path
+    expect(page).to have_selector("#project_#{my_project.id}")
+    expect(page).not_to have_selector("#project_#{not_my_project.id}")
+  end
+  #
+
 end

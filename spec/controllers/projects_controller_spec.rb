@@ -8,11 +8,12 @@
 #---
 require 'rails_helper'
 
-RSpec.describe ProjectsController, type: :controller do
+RSpec.describe ProjectsController, :type => :controller do
+  let(:user) { User.create!(email: "rspec@example.com", password: "password") }
 
   #
   before(:example) do
-    sign_in User.create!(email: "rspec@example.com", password: "password")
+    sign_in(user)
   end
   #
 
@@ -27,15 +28,15 @@ RSpec.describe ProjectsController, type: :controller do
 
     #
     it "creates a project (mock version)" do
-      fake_action = instance_double(CreatesProject, create: true) 
-      expect(CreatesProject).to receive(:new)  
-          .with(name: "Runway", task_string: "Start something:2")
+      fake_action = instance_double(CreatesProject, create: true)
+      expect(CreatesProject).to receive(:new)
+          .with(name: "Runway", task_string: "Start something:2", users: [user])
           .and_return(fake_action)
       post :create, project: {name: "Runway", tasks: "Start something:2"}
       expect(response).to redirect_to(projects_path)
-      expect(assigns(:action)).not_to be_nil 
+      expect(assigns(:action)).not_to be_nil
     end
-  #
+    #
 
     #
     it "goes back to the form on failure" do
@@ -65,6 +66,14 @@ RSpec.describe ProjectsController, type: :controller do
       patch :update, id: sample.id, project: {name: "Fred"} 
       expect(response).to render_template(:edit) 
     end
+
+    #
+    it "does not allow user to make a project public if it is not theirs" do
+      sample = Project.create!(name: "Test Project", public: false)
+      patch :update, id: sample.id, project: {public: true}
+      expect(sample.reload.public).to be_falsy
+    end
+    #
   end
   #
 
@@ -82,6 +91,19 @@ RSpec.describe ProjectsController, type: :controller do
       allow(controller.current_user).to receive(:can_view?).and_return(false)
       get :show, id: project.id
       expect(response).to redirect_to(new_user_session_path)
+    end
+  end
+  #
+
+  #
+  describe "GET index" do
+    it "displays all projects correctly" do
+      user = User.new
+      project = Project.new(:name => "Project Greenlight")
+      expect(controller).to receive(:current_user).and_return(user)
+      expect(user).to receive(:visible_projects).and_return([project])
+      get :index
+      assert_equal assigns[:projects].map(&:__getobj__), [project]
     end
   end
   #

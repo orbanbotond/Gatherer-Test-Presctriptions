@@ -9,10 +9,18 @@
 class Project < ActiveRecord::Base
   has_many :tasks, -> { order "project_order ASC" }
 
+  #
   has_many :roles
   has_many :users, through: :roles
+  #
 
   validates :name, presence: true
+
+  #
+  def self.all_public
+    where(public: true)
+  end
+  #
 
   def total_size
     tasks.to_a.sum(&:size)
