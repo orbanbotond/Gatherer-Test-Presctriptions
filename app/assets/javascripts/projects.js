@@ -44,9 +44,9 @@ var Project = {
 
   downClickOn: function(anchor_element) {
     row = Project.taskFromAnchor(anchor_element);
-    nextRow = Project.nextTask(row);
-    if(nextRow == null) { return };
-    Project.swapRows(row, nextRow);
+    next = Project.nextTask(row);
+    if(next == null) { return };
+    Project.swapRows(row, next);
   }
 
 }

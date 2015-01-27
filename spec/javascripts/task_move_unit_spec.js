@@ -17,7 +17,7 @@ describe("with a list of tasks", function() {
   });
 
   it("identifies row from target", function() {
-    expect(Project.taskFromAnchor($("#task_2 .up"))).toHaveId("task_2")
+    expect(Project.taskFromAnchor($("#task_2 .up"))).toHaveId("task_2");
   });
 
   it("identifies predecessor if it exists", function() {
@@ -46,7 +46,7 @@ describe("with a list of tasks", function() {
     expect(Project.nextTask($("#task_3"))).toBeNull();
   });
 
-  it("can handle down click", function() {
+  it("can handle up click", function() {
     Project.downClickOn($("#task_2 .down"));
     expect($("tr")).toMatchDomIds(["task_1", "task_3", "task_2"]);
   });
