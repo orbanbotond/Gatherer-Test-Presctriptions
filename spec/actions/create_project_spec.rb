@@ -6,7 +6,16 @@
 # We make no guarantees that this code is fit for any purpose. 
 # Visit http://www.pragmaticprogrammer.com/titles/nrtest2 for more book information.
 #---
-require "rails_helper"
+#
+require_relative '../active_record_spec_helper'
+require 'devise'
+require 'devise/orm/active_record'
+require_relative '../../app/models/project'
+require_relative '../../app/models/task'
+require_relative '../../app/models/role'
+require_relative '../../app/models/user'
+require_relative '../../app/actions/creates_project'
+#
 
 describe CreatesProject do
 
@@ -63,7 +72,8 @@ describe CreatesProject do
   #
   it "adds users to the project" do
     user = User.new
-    creator = CreatesProject.new(name: "Project Runway", users: [user])
+    creator = CreatesProject.new(name: "Project Runway",
+        users: [user])
     creator.build
     expect(creator.project.users).to eq([user])
   end
